@@ -1,10 +1,12 @@
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.net.URL;
 import java.time.Duration;
 
 public class TestLogin {
@@ -12,15 +14,14 @@ public class TestLogin {
     private WebDriver driver;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws Exception {
         System.out.println("Setting up the test environment...");
-        // Set the path to the ChromeDriver
-        System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
+
+        // Set the URL of the Selenium Grid Hub
+        String seleniumGridUrl = System.getenv("SELENIUM_GRID_URL"); // URL from Jenkins environment variable
 
         // Initialize ChromeOptions
         ChromeOptions options = new ChromeOptions();
-
-        // Add options for headless mode and other settings
         options.addArguments("--headless"); // Run in headless mode
         options.addArguments("--disable-gpu"); // Disable GPU (optional)
         options.addArguments("--no-sandbox"); // For Linux environments
@@ -28,8 +29,8 @@ public class TestLogin {
         options.addArguments("--disable-dev-shm-usage");  // This can help on low-memory environments.
         options.addArguments("--remote-allow-origins=*"); // Prevent connection issues with newer Chrome versions
 
-        // Initialize ChromeDriver with the options
-        driver = new ChromeDriver(options);
+        // Initialize RemoteWebDriver to connect to Selenium Grid Hub
+        driver = new RemoteWebDriver(new URL(seleniumGridUrl), options);
 
         // Set implicit wait time
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
@@ -41,7 +42,7 @@ public class TestLogin {
     public void testLogin() {
         System.out.println("Starting testLogin...");
 
-        // Load the local HTML file
+        // Load the login page
         System.out.println("Loading the login page...");
         driver.get("file:///root/selenium-and-junit-test/login.html");
 
