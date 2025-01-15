@@ -44,7 +44,7 @@ public class TestLogin {
 
         // Load the login page
         System.out.println("Loading the login page...");
-        driver.get("file:///root/selenium-and-junit-test/login.html");
+        driver.get("file:///var/lib/jenkins/workspace/test/login.html");
 
         // Find and fill the username field
         System.out.println("Entering username...");
